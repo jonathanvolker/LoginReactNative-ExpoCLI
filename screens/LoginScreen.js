@@ -2,44 +2,44 @@ import { StatusBar } from 'expo-status-bar';
 import React ,{useState} from 'react';
 import { StyleSheet, Text, View , TouchableOpacity , KeyboardAvoidingView} from 'react-native';
 import { Button , TextInput } from 'react-native-paper';
-import axios from 'axios';
+import axios from 'axios'
 
-export default function SignupScreen(props) {
-const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
-const token ="";
+export default function LoginScreen(props) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const token = "";
+    
+    const handleEmailChange =(e)=>{
+      //e.preventDefault()
+      setEmail(e);
+    }
+    const handlePasswordChange =(e)=>{
+     // e.preventDefault()
+      setPassword(e);
+    }
+    
+    async function handleSubmit(e) {
+     // e.preventDefault();ç
+     const data ={ email:email, password:password}
+     
+            const post = await axios.post("https://apimongoprueba.herokuapp.com/signin",data)
+            const response = await post;
+            console.log(response.data)
 
-const handleEmailChange =(e)=>{
-  //e.preventDefault()
-  setEmail(e);
-}
-const handlePasswordChange =(e)=>{
- // e.preventDefault()
-  setPassword(e);
-}
+            if(response.data.error==="Must provide email and password"){
+                alert("ingrese usuario y contraseña")
+            }
+            if(response.data.error==="not user"){
+                alert("debe registrarse")
+            }
+            if(response.data.error==="error compare password"){
+                alert("error de credenciales")
+            }
+            if(response.data.token){
+                 token = response.data.token;
+            }
 
-async function handleSubmit(e) {
-  // e.preventDefault();ç
-  const data ={ email:email, password:password}
-  
-         const post = await axios.post("https://apimongoprueba.herokuapp.com/signup",data)
-         const response = await post;
-         console.log(response.data)
-
-         if(response.data.error==="Must provide email and password"){
-             alert("ingrese usuario y contraseña")
-         }
-         if(response.data.error==="not user"){
-             alert("debe registrarse")
-         }
-         if(response.data.error==="error compare password"){
-             alert("error de credenciales")
-         }
-         if(response.data.token){
-              token = response.data.token;
-         }
-
- };
+    };
 
   return (
     <KeyboardAvoidingView behavior="position">
@@ -56,9 +56,12 @@ async function handleSubmit(e) {
       <View style={styles.view1} />
     
        <Text style= {styles.bottomTitle}> 
-         Creando nueva cuenta
+          Iniciar sesion
       </Text>   
       
+      <Text style= {styles.loginTitle}> 
+          ingrese su mail
+      </Text>  
       <TextInput style={styles.input}
                  mode="outlined"
                  name="email"
@@ -77,25 +80,32 @@ async function handleSubmit(e) {
                 value ={password}
                 onChangeText={e => handlePasswordChange(e)}
       /> 
-     
-      <Button
-          style={styles.input}
-          mode="outlined" 
-          onPress={(e)=> { handleSubmit(e)}} >
-             Crear cuenta
-      </Button> 
+   
 
       <TouchableOpacity>
-        <Text style= {styles.loginTitle}> 
-            ya tiene una? Inicia sesion aqui!!!
-        </Text> 
+        
         <Button
-          style={styles.input}
-          mode="outlined" 
-          onPress={()=> props.navigation.navigate("Login")} >
-             Iniciar sesion
-      </Button> 
-       
+            style={styles.input}
+            mode="outlined" 
+            onPress={(e)=> { handleSubmit(e)}} >
+              Iniciar sesion
+        </Button> 
+
+
+
+      
+
+     <Text style= {styles.loginTitle} > 
+         No tiene cuenta? puede crear una ...
+     </Text>
+     <Button
+            style={styles.input}
+            mode="outlined" 
+            onPress={()=> props.navigation.navigate("Signup")} >
+              Crear una cuenta nueva
+        </Button> 
+   
+
       </TouchableOpacity>
 
     
@@ -109,13 +119,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-   
   },
 
   title:{
     fontSize:35 , 
     marginLeft:18, 
-    marginTop:5, 
+    marginTop:25, 
     color:"blue" },
 bottomTitle: {
     fontSize:25 , 
@@ -129,7 +138,7 @@ createTitle: {
    
     }, 
     loginTitle: {
-      fontSize:17 , 
+      fontSize:15 , 
       marginLeft:18, 
       marginTop:20, 
      
