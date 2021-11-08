@@ -20,6 +20,13 @@ export default function HomeScreen(props) {
           onPress={()=> props.navigation.navigate("Login")} >
              Iniciar sesion
       </Button> 
+      <Text style= {styles.loginTitle}> si no tiene cuenta puede crear una...</Text>
+      <Button
+          style={styles.input}
+          mode="outlined" 
+          onPress={()=> props.navigation.navigate("Signup")} >
+             Nueva cuenta
+      </Button> 
 
   </View>
   );

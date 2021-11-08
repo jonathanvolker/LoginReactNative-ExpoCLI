@@ -7,7 +7,7 @@ import axios from 'axios'
 export default function LoginScreen(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const token = "";
+    let token = "";
     
     const handleEmailChange =(e)=>{
       //e.preventDefault()
@@ -20,25 +20,33 @@ export default function LoginScreen(props) {
     
     async function handleSubmit(e) {
      // e.preventDefault();ç
-     const data ={ email:email, password:password}
-     
-            const post = await axios.post("https://apimongoprueba.herokuapp.com/signin",data)
-            const response = await post;
-            console.log(response.data)
-
-            if(response.data.error==="Must provide email and password"){
-                alert("ingrese usuario y contraseña")
-            }
-            if(response.data.error==="not user"){
-                alert("debe registrarse")
-            }
-            if(response.data.error==="error compare password"){
-                alert("error de credenciales")
-            }
-            if(response.data.token){
-                 token = response.data.token;
-            }
-
+     if(!/\S+@\S+\.\S+/.test(email)) {
+      alert('el usuario tiene que ser un email');
+    } 
+    else if(password.length < 6) {
+      alert("la contraseña debe tener 6 caracteres")
+    } else {
+      const data = { 
+        email : email,
+        password : password,
+        
+      }
+      const post = await axios.post("https://apimongoprueba.herokuapp.com/signin",data)
+      const response = await post;
+      console.log(response.data)
+  
+      if(response.data.error==="Must provide email and password'"){
+          alert("debe ingresar usuario y contraseña")
+      }else if(response.data.error==="not user"){
+          alert("usuario no registrado")
+      }else {
+        if(response.data.token){
+          token = response.data.token;
+          alert("usuario creado con exito!!!")
+           props.navigation.navigate('Login',{token:token})
+        }
+      }
+     }
     };
 
   return (
@@ -50,9 +58,6 @@ export default function LoginScreen(props) {
           onPress={()=> props.navigation.navigate("Home")} >
              Home
       </Button>
-      <Text style={ styles.title} >
-          Bienvenido 
-      </Text>
       <View style={styles.view1} />
     
        <Text style= {styles.bottomTitle}> 

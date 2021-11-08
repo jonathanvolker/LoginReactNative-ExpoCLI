@@ -7,37 +7,71 @@ import axios from 'axios';
 export default function SignupScreen(props) {
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
-const token ="";
+const [password1, setPassword1] = useState("");
+const [name, setName] = useState("");
+const [lastName, setLastName] = useState("");
+let token = "";
 
-const handleEmailChange =(e)=>{
-  //e.preventDefault()
+
+const handleEmailChange =(e)=> {
+ 
   setEmail(e);
 }
+
 const handlePasswordChange =(e)=>{
  // e.preventDefault()
   setPassword(e);
 }
+const handlePassword1Change =(e)=>{
+  // e.preventDefault()
+   setPassword1(e);
+ }
+const handleNameChange =(e)=>{
+  // e.preventDefault()
+   setName(e);
+ }
+ const handleLastNameChange =(e)=>{
+  // e.preventDefault()
+   setLastName(e);
+ }
 
 async function handleSubmit(e) {
-  // e.preventDefault();ç
-  const data ={ email:email, password:password}
-  
-         const post = await axios.post("https://apimongoprueba.herokuapp.com/signup",data)
-         const response = await post;
-         console.log(response.data)
+  if(!/\S+@\S+\.\S+/.test(email)) {
+    alert('el usuario tiene que ser un email');
+  } 
+  else if(password.length < 6) {
+    alert("la contraseña debe tener 6 caracteres")
+  }else if(password1.length < 6) {
+    if(password1 !== password) {
+      alert("las contraseñas no coinciden")
+    }
 
-         if(response.data.error==="Must provide email and password"){
-             alert("ingrese usuario y contraseña")
-         }
-         if(response.data.error==="not user"){
-             alert("debe registrarse")
-         }
-         if(response.data.error==="error compare password"){
-             alert("error de credenciales")
-         }
-         if(response.data.token){
-              token = response.data.token;
-         }
+  } else if(name.length < 1){
+    alert("el nombre no puede estar vacio")
+  }else if(lastName.length < 1){
+    alert("el apellido no puede estar vacio")
+  }else {
+    const data = { 
+      email : email,
+      password : password,
+      firstName : name,
+      lastName : lastName
+    }
+    const post = await axios.post("https://apimongoprueba.herokuapp.com/signup",data)
+    const response = await post;
+    console.log(response.data)
+
+    if(response.data.error==="failed to create user"){
+        alert("fallo al crear el usuario")
+    }
+   
+    if(response.data.token){
+         token = response.data.token;
+         alert("usuario creado con exito!!!")
+          props.navigation.navigate('Login',{token:token})
+    }
+
+  }
 
  };
 
@@ -50,32 +84,51 @@ async function handleSubmit(e) {
           onPress={()=> props.navigation.navigate("Home")} >
              Home
       </Button>
-      <Text style={ styles.title} >
-          Bienvenido 
-      </Text>
+     
       <View style={styles.view1} />
     
        <Text style= {styles.bottomTitle}> 
-         Creando nueva cuenta
+         Nueva cuenta
       </Text>   
+
+      <TextInput style={styles.input}
+                 mode="outlined"
+                 name="nombre"
+                 label="Nombre"
+                 value ={name}
+                 onChangeText={e => handleNameChange(e)}
+                 />  
       
       <TextInput style={styles.input}
                  mode="outlined"
+                 name="apellido"
+                 label="Apellido"
+                 value ={lastName}
+                 onChangeText={e => handleLastNameChange(e)}
+                 />  
+      <TextInput style={styles.input}
+                 mode="outlined"s
                  name="email"
-                 label="Email"
+                 label="email"
                  value ={email}
                  onChangeText={e => handleEmailChange(e)}
-                 />  
-      <Text style= {styles.loginTitle}> 
-          ingrese su contraseña
-      </Text>   
+                 />
+     
       <TextInput 
                 style={styles.input}
                 mode="outlined"
                 name="password"
-                label="Password"
+                label="contraseña"
                 value ={password}
                 onChangeText={e => handlePasswordChange(e)}
+      /> 
+         <TextInput 
+                style={styles.input}
+                mode="outlined"
+                name="password1"
+                label="repetir contraseña"
+                value ={password1}
+                onChangeText={e => handlePassword1Change(e)}
       /> 
      
       <Button
@@ -86,15 +139,10 @@ async function handleSubmit(e) {
       </Button> 
 
       <TouchableOpacity>
-        <Text style= {styles.loginTitle}> 
+        <Text style= {styles.loginTitle}  onPress={()=> props.navigation.navigate("Login")}> 
             ya tiene una? Inicia sesion aqui!!!
         </Text> 
-        <Button
-          style={styles.input}
-          mode="outlined" 
-          onPress={()=> props.navigation.navigate("Login")} >
-             Iniciar sesion
-      </Button> 
+  
        
       </TouchableOpacity>
 
