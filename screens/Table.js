@@ -4,21 +4,20 @@ import { Button , TextInput } from 'react-native-paper';
 
 
 
-export default function HomeScreen(props) {
-
+export default function Table(props) {
+    console.log(props)
 
   return (
   <View style={styles.container}>
   <View style={styles.titleContainer}>
-    <Text style= {styles.title}> Bienvenido al servicio del bares para mozo</Text>
-    
-    <Text style= {styles.loginTitle}> Inicie sesion para empezar a tomar pedidos</Text>
+    <Text style= {styles.title}>Seleccione la mesa a atender</Text>
+   
     </View>
     <Button
           style={styles.input}
           mode="outlined" 
           onPress={()=> props.navigation.navigate("Login")} >
-             Iniciar sesion
+             Fijar mesa
       </Button> 
     
 

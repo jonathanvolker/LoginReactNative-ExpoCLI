@@ -31,19 +31,23 @@ export default function LoginScreen(props) {
         password : password,
         
       }
-      const post = await axios.post("https://apimongoprueba.herokuapp.com/signin",data)
+  
+
+
+     const post = await axios.post("http://localhost:4000/signin",data)
+      //https://apimongoprueba.herokuapp.com/signin
       const response = await post;
-      console.log(response.data)
+      //console.log(response.data)
   
       if(response.data.error==="Must provide email and password'"){
           alert("debe ingresar usuario y contraseña")
       }else if(response.data.error==="not user"){
           alert("usuario no registrado")
       }else {
-        if(response.data.token){
-          token = response.data.token;
-          alert("usuario creado con exito!!!")
-           props.navigation.navigate('Login',{token:token})
+        if(response.data){
+         
+          alert("usuario logueado con exito!!!")
+           props.navigation.navigate('Menu',{user:response.data.firstName})
         }
       }
      }
@@ -96,20 +100,13 @@ export default function LoginScreen(props) {
               Iniciar sesion
         </Button> 
 
-
-
-      
-
-     <Text style= {styles.loginTitle} > 
-         No tiene cuenta? puede crear una ...
-     </Text>
-     <Button
+    {/*  <Button
             style={styles.input}
             mode="outlined" 
             onPress={()=> props.navigation.navigate("Signup")} >
               Crear una cuenta nueva
         </Button> 
-   
+    */}
 
       </TouchableOpacity>
 

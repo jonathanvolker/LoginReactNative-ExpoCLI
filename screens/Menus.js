@@ -4,24 +4,15 @@ import { Button , TextInput } from 'react-native-paper';
 
 
 
-export default function HomeScreen(props) {
+export default function Menus() {
 
 
   return (
   <View style={styles.container}>
   <View style={styles.titleContainer}>
-    <Text style= {styles.title}> Bienvenido al servicio del bares para mozo</Text>
+    <Text style= {styles.title}> Aqui podra ver todos los precios de menus y bebidas</Text>
     
-    <Text style= {styles.loginTitle}> Inicie sesion para empezar a tomar pedidos</Text>
     </View>
-    <Button
-          style={styles.input}
-          mode="outlined" 
-          onPress={()=> props.navigation.navigate("Login")} >
-             Iniciar sesion
-      </Button> 
-    
-
   </View>
   );
 }
